@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="230" viewBox="0 0 1300 230" font-family="JetBrains Mono, Fira Code, Consolas, Menlo, monospace">
+  <!-- terminal window -->
+  <rect x="0" y="0" width="1300" height="230" rx="10" fill="#1e1e2e"/>
+  <!-- title bar -->
+  <rect x="0" y="0" width="1300" height="32" rx="10" fill="#313244"/>
+  <rect x="0" y="20" width="1300" height="12" fill="#313244"/>
+  <circle cx="20" cy="16" r="6" fill="#f38ba8"/>
+  <circle cx="40" cy="16" r="6" fill="#f9e2af"/>
+  <circle cx="60" cy="16" r="6" fill="#a6e3a1"/>
+  <text x="650" y="20" font-size="13" fill="#a6adc8" text-anchor="middle">kali@kali: ~/Projects/claude-statusline/.claude/worktrees/demo</text>
+
+  <!-- empty prompt box -->
+  <rect x="20" y="46" width="1260" height="42" rx="8" fill="#181825" stroke="#585b70" stroke-width="1.5"/>
+  <text x="36" y="73" font-size="16" fill="#cdd6f4">&gt;</text>
+  <rect x="52" y="59" width="8" height="18" fill="#cdd6f4"/>
+
+  <!-- line 1 -->
+  <text x="20" y="128" font-size="15" xml:space="preserve">
+    <tspan fill="#D97757" font-weight="bold">Sonnet 5</tspan><tspan fill="#D97757"> (high)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B482FF">thinking: on</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B4DCB4">Plan</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#00C850">█</tspan><tspan fill="#2AC845">█</tspan><tspan fill="#55C83A">█</tspan><tspan fill="#80C830">█</tspan><tspan fill="#AAC825">█</tspan><tspan fill="#3C3C3C">███████████████</tspan><tspan fill="#e0e0e0"> ⚡ </tspan><tspan fill="#55C83A" font-weight="bold">25%</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#DCC800">$0.38</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#00C850">+42</tspan><tspan fill="#e0e0e0"> </tspan><tspan fill="#DC2814">-5</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">5h: ○ 12% (resets 3:15 PM)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">7d: ○ 8%</tspan>
+  </text>
+
+  <!-- line 2: inside a Claude Code worktree — the isolated worktree name + the original branch, no plain "branch:" segment -->
+  <text x="20" y="163" font-size="15" xml:space="preserve">
+    <tspan fill="#96C8FF">📁 ~/Projects/claude-statusline/.claude/worktrees/demo</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#00DCDC">🌿 worktree-demo</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#DCB400">← master</tspan>
+  </text>
+
+  <!-- Claude Code's own auto-accept mode indicator (rendered by Claude Code itself, not the statusline script) -->
+  <text x="20" y="198" font-size="14" xml:space="preserve">
+    <tspan fill="#f9e2af">⏵⏵ </tspan><tspan fill="#7f849c">auto mode on (shift+tab to cycle)</tspan>
+  </text>
+</svg>

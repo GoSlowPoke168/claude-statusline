@@ -179,7 +179,18 @@ orig_branch=$(echo "$input" | jq -r '.worktree.original_branch // empty')
 seg_orig_branch=""
 [ -n "$orig_branch" ] && seg_orig_branch="\033[38;2;220;180;0m\xe2\x86\x90 ${orig_branch}${RESET}"
 
+# --- Plain current git branch (only when not in a Claude Code worktree-isolated session) ---
+seg_branch=""
+if [ -z "$git_worktree" ]; then
+    branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    if [ -n "$branch" ] && [ "$branch" != "HEAD" ]; then
+        C_BRANCH='\033[38;2;120;200;120m'
+        seg_branch="${C_BRANCH}\xf0\x9f\x8c\xbf ${branch}${RESET}"
+    fi
+fi
+
 line2="${seg_dir}"
+[ -n "$seg_branch" ] && line2="${line2}${PIPE}${seg_branch}"
 [ -n "$seg_git_worktree" ] && line2="${line2}${PIPE}${seg_git_worktree}"
 [ -n "$seg_orig_branch" ] && line2="${line2}${PIPE}${seg_orig_branch}"
 
