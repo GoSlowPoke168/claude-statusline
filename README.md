@@ -7,6 +7,7 @@ one-command installers for Linux, macOS, and Windows.
 
 **Line 1:** model + effort · thinking mode · output style · context-usage bar · session cost ·
 code velocity (+added/-removed) · 5-hour and 7-day rate limits (with local reset time)
+
 **Line 2:** current directory · current git branch (or, in a worktree session, the worktree name
 and its original branch)
 
@@ -26,8 +27,6 @@ isolated checkout on its own branch, used for parallel/experimental work), line 
 branch name for the worktree's name and the branch it originally forked from.
 
 ## Install
-
-Clone this repo on the target machine, then:
 
 **Linux / macOS**
 ```sh
@@ -58,8 +57,6 @@ Restart Claude Code (or start a new session) after installing, either way.
    it's missing (`apt`/`dnf`/`yum`/`pacman`/`zypper`/`brew`).
 3. Merges a `statusLine` key into `settings.json` — it only touches that one key, so any other
    settings you already have are left alone.
-
-Safe to re-run any time (e.g. after editing the script) — it's idempotent.
 
 ## Requirements
 
