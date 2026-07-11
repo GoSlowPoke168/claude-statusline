@@ -9,6 +9,9 @@ code velocity (+added/-removed) · 5-hour and 7-day rate limits (with local rese
 
 ![Example statusline output](docs/statusline-preview.svg)
 
+*(The `⏵⏵ auto mode on` line under the statusline is Claude Code's own UI, not something this
+script prints — shown above just for context on how it all looks together.)*
+
 ## Install
 
 Clone this repo on the target machine, then:
