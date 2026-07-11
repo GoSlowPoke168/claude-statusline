@@ -7,20 +7,22 @@ one-command installers for Linux, macOS, and Windows.
 code velocity (+added/-removed) · 5-hour and 7-day rate limits (with local reset time)
 **Line 2:** current directory · git worktree · worktree's original branch
 
+![Example statusline output](docs/statusline-preview.svg)
+
 ## Install
 
 Clone this repo on the target machine, then:
 
 **Linux / macOS**
 ```sh
-git clone <this-repo-url> claude-statusline
+git clone https://github.com/GoSlowPoke168/claude-statusline.git
 cd claude-statusline
 ./install.sh
 ```
 
 **Windows**
 ```powershell
-git clone <this-repo-url> claude-statusline
+git clone https://github.com/GoSlowPoke168/claude-statusline.git
 cd claude-statusline
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
