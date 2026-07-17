@@ -14,9 +14,9 @@
   <text x="36" y="73" font-size="16" fill="#cdd6f4">&gt;</text>
   <rect x="52" y="59" width="8" height="18" fill="#cdd6f4"/>
 
-  <!-- line 1 -->
+  <!-- line 1: low context usage (15%), early in a session -->
   <text x="20" y="128" font-size="15" xml:space="preserve">
-    <tspan fill="#D97757" font-weight="bold">Sonnet 5</tspan><tspan fill="#D97757"> (high)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B482FF">thinking: on</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B4DCB4">Plan</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#00C850">█</tspan><tspan fill="#2AC845">█</tspan><tspan fill="#55C83A">█</tspan><tspan fill="#80C830">█</tspan><tspan fill="#AAC825">█</tspan><tspan fill="#D5C81A">█</tspan><tspan fill="#DCB810">█</tspan><tspan fill="#DC9A0C">█</tspan><tspan fill="#DC7008">█</tspan><tspan fill="#3C3C3C">█████</tspan><tspan fill="#e0e0e0"> ⚡ </tspan><tspan fill="#DCB810" font-weight="bold">62%</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#DCC800">$1.42</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#00C850">+128</tspan><tspan fill="#e0e0e0"> </tspan><tspan fill="#DC2814">-34</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">5h: ◑ 45% (resets 3:15 PM)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">7d: ◔ 22%</tspan>
+    <tspan fill="#D97757" font-weight="bold">Sonnet 5</tspan><tspan fill="#D97757"> (high)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B482FF">thinking: on</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#D7E182">Default</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#19B45F">█</tspan><tspan fill="#2DB655">█</tspan><tspan fill="#42B84B">█</tspan><tspan fill="#3C3C3C">█████████████████</tspan><tspan fill="#e0e0e0"> 🟢 </tspan><tspan fill="#42B84B" font-weight="bold">15%</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#DCC800">$0.87</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#19B45F">+64</tspan><tspan fill="#e0e0e0"> </tspan><tspan fill="#DC2814">-12</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">5h: ◔ 38% (resets 2:47 PM)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">7d: ○ 12% (6d14h)</tspan>
   </text>
 
   <!-- line 2: normal session, no worktree — shows the plain current branch -->
@@ -24,8 +24,9 @@
     <tspan fill="#96C8FF">📁 ~/Projects/claude-statusline</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C878">🌿 master</tspan>
   </text>
 
-  <!-- Claude Code's own auto-accept mode indicator (rendered by Claude Code itself, not the statusline script) -->
+  <!-- Claude Code's own auto-accept mode indicator (rendered by Claude Code itself, not the statusline script).
+       Color is Claude Code's real "warning" theme token (dark theme): rgb(255,193,7). -->
   <text x="20" y="198" font-size="14" xml:space="preserve">
-    <tspan fill="#f9e2af">⏵⏵ </tspan><tspan fill="#7f849c">auto mode on (shift+tab to cycle)</tspan>
+    <tspan fill="#FFC107">⏵⏵ auto mode on</tspan><tspan fill="#7f849c"> (shift+tab to cycle)</tspan>
   </text>
 </svg>

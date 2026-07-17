@@ -6,19 +6,17 @@ one-command installers for Linux, macOS, and Windows.
 ## What it shows
 
 **Line 1:** model + effort · thinking mode · output style · context-usage bar · session cost ·
-code velocity (+added/-removed) · 5-hour and 7-day rate limits (with local reset time)
+code velocity (+added/-removed) · 5-hour rate limit (with local reset time) · 7-day rate limit
+(with a countdown to reset, e.g. `6d14h`)
 
 **Line 2:** current directory · current git branch (or, in a worktree session, the worktree name
 and its original branch)
 
-### Normal session
+### Normal session, early on (low context usage)
 
 ![Example statusline output](docs/statusline-preview.svg)
 
-*(The `⏵⏵ auto mode on` line is Claude Code's own UI, not something this script prints — shown
-just for context on how it all looks together.)*
-
-### Inside a Claude Code worktree session
+### Inside a Claude Code worktree session, deep into a session (high context usage)
 
 ![Example statusline output inside a worktree](docs/statusline-worktree-preview.svg)
 
@@ -69,6 +67,9 @@ Restart Claude Code (or start a new session) after installing, either way.
 
 - The bash version uses GNU `date -d`, with a fallback to BSD `date -r` for macOS, to render
   local rate-limit reset times.
+- The context-usage segment has a commented-out `(used/max token count)` sub-feature — e.g.
+  `(116k/1M)` next to the percentage. It's disabled by default; uncomment the block in both
+  scripts (search for "Token count") to turn it back on.
 - To customize colors or layout, edit `statusline-command.sh` (Linux/macOS) or
   `statusline-command.ps1` (Windows) directly, then re-run the installer to redeploy it.
 - The two scripts are kept in sync by hand — if you change one, mirror the change in the other.

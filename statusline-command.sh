@@ -9,15 +9,15 @@ RESET='\033[0m'
 SEP='\033[38;2;110;110;110m'   # dim gray pipe separator
 PIPE="${SEP} | ${RESET}"
 
-# color interpolation helper: green(0,200,80) -> yellow(220,200,0) -> red(220,40,20)
+# color interpolation helper: green(25,180,95) -> yellow(220,200,0) -> red(220,40,20)
 color_at() {
     # $1 = position percentage 0-100
     awk -v p="$1" 'BEGIN{
         if (p <= 50) {
             f = p/50.0
-            r = 0   + (220-0)   * f
-            g = 200 + (200-200) * f
-            b = 80  + (0-80)    * f
+            r = 25  + (220-25)  * f
+            g = 180 + (200-180) * f
+            b = 95  + (0-95)    * f
         } else {
             f = (p-50)/50.0
             r = 220 + (220-220) * f
@@ -53,7 +53,7 @@ fi
 # --- Mode (output style) ---
 mode=$(echo "$input" | jq -r '.output_style.name // empty')
 seg_mode=""
-[ -n "$mode" ] && seg_mode="\033[38;2;180;220;180m${mode}${RESET}"
+[ -n "$mode" ] && seg_mode="\033[38;2;215;225;130m${mode}${RESET}"
 
 # --- Context usage ---
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
@@ -86,13 +86,35 @@ usage_emoji=$(awk -v p="$used_pct" 'BEGIN{
     else print "\xf0\x9f\x9a\xa8";
 }')
 
-# --- Percentage colored by usage level ---
-pct_rgb=$(color_at "$used_pct")
+# --- Percentage colored to exactly match the bar's last filled block ---
+if [ "$filled" -gt 0 ]; then
+    last_pos=$(awk -v i="$filled" -v n="$blocks" 'BEGIN{printf "%.2f", ((i-1)/(n-1))*100}')
+else
+    last_pos=0
+fi
+pct_rgb=$(color_at "$last_pos")
 pr=$(echo "$pct_rgb" | cut -d' ' -f1)
 pg=$(echo "$pct_rgb" | cut -d' ' -f2)
 pb=$(echo "$pct_rgb" | cut -d' ' -f3)
 pct_str=$(awk -v p="$used_pct" 'BEGIN{printf "%.0f%%", p}')
 seg_ctx="${bar} ${usage_emoji} \033[1;38;2;${pr};${pg};${pb}m${pct_str}${RESET}"
+
+# --- Token count (used/max), disabled for now — flip back on by uncommenting.
+# Color is linked to the same pr;pg;pb as the percentage text.
+# used_tok=$(echo "$input" | jq -r '.context_window.total_input_tokens // empty')
+# max_tok=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
+# if [ -n "$used_tok" ] && [ -n "$max_tok" ]; then
+#     fmt_tok() {
+#         awk -v n="$1" 'BEGIN{
+#             if (n >= 1000000) printf "%.0fM", n/1000000
+#             else if (n >= 1000) printf "%.0fk", n/1000
+#             else printf "%d", n
+#         }'
+#     }
+#     used_tok_str=$(fmt_tok "$used_tok")
+#     max_tok_str=$(fmt_tok "$max_tok")
+#     seg_ctx="${seg_ctx} \033[38;2;${pr};${pg};${pb}m(${used_tok_str}/${max_tok_str})${RESET}"
+# fi
 
 # --- Session cost (yellow) ---
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
@@ -110,7 +132,7 @@ seg_velocity=""
 if [ -n "$added" ] || [ -n "$removed" ]; then
     [ -z "$added" ] && added=0
     [ -z "$removed" ] && removed=0
-    C_ADD='\033[38;2;0;200;80m'
+    C_ADD='\033[38;2;25;180;95m'
     C_DEL='\033[38;2;220;40;20m'
     seg_velocity="${C_ADD}+${added}${RESET} ${C_DEL}-${removed}${RESET}"
 fi
@@ -137,6 +159,18 @@ epoch_to_time() {
     date -d "@${1}" +"%-I:%M %p" 2>/dev/null || date -r "${1}" +"%-I:%M %p" 2>/dev/null
 }
 
+# epoch -> "<days>d<hours>h" countdown until that time from now
+epoch_to_countdown() {
+    now=$(date +%s)
+    awk -v target="$1" -v now="$now" 'BEGIN{
+        diff = target - now
+        if (diff < 0) diff = 0
+        days = int(diff / 86400)
+        hours = int((diff % 86400) / 3600)
+        printf "%dd%dh", days, hours
+    }'
+}
+
 C_RL='\033[38;2;120;200;255m'
 seg_ratelimit=""
 if [ -n "$five_h_pct" ]; then
@@ -152,8 +186,13 @@ fi
 if [ -n "$seven_d_pct" ]; then
     seven_d_str=$(awk -v p="$seven_d_pct" 'BEGIN{printf "%.0f%%", p}')
     seven_d_glyph=$(circle_glyph "$seven_d_pct")
+    reset_str=""
+    if [ -n "$seven_d_reset" ]; then
+        seven_d_countdown=$(epoch_to_countdown "$seven_d_reset")
+        [ -n "$seven_d_countdown" ] && reset_str=" (${seven_d_countdown})"
+    fi
     [ -n "$seg_ratelimit" ] && seg_ratelimit="${seg_ratelimit}${PIPE}"
-    seg_ratelimit="${seg_ratelimit}${C_RL}7d: ${seven_d_glyph} ${seven_d_str}${RESET}"
+    seg_ratelimit="${seg_ratelimit}${C_RL}7d: ${seven_d_glyph} ${seven_d_str}${reset_str}${RESET}"
 fi
 
 # --- Assemble line 1 ---
