@@ -44,12 +44,22 @@ stdin (session/model/cost/context/rate-limit/workspace state) and expecting two 
 Key derived-vs-raw distinctions worth knowing before editing:
 
 - **Context bar**: a 20-block gradient bar (green → yellow → red) driven by
-  `context_window.used_percentage`, built via a `color_at`/`Color-At` linear-interpolation helper
-  used both for the bar blocks and the percentage text color.
+  `context_window.used_percentage`, built via a `color_at`/`Color-At` linear-interpolation helper.
+  The percentage text is **not** colored independently from `used_percentage` — it deliberately
+  reuses the RGB of the bar's *last filled block* (`last_pos`/`$lastPos`, derived from `filled`/
+  `$filled`), so the two always match exactly even though 20 blocks quantize the percentage. Keep
+  that indirection if you touch this segment; recomputing from the raw percentage will make the
+  text and bar drift apart at some values.
 - **Rate limits**: `rate_limits.five_hour` and `rate_limits.seven_day`, each rendered with a
-  5-stage "moon phase" circle glyph (`○ ◔ ◑ ◕ ●`) keyed off `used_percentage`, plus a local-time
-  reset (`resets_at` epoch converted to local `h:mm a`). Bash tries GNU `date -d` first, falling
-  back to BSD `date -r` for macOS; PowerShell uses `[DateTimeOffset]::FromUnixTimeSeconds(...)`.
+  5-stage "moon phase" circle glyph (`○ ◔ ◑ ◕ ●`) keyed off `used_percentage` — but the two windows
+  render their reset differently. `five_hour` shows a local-time clock (`resets_at` epoch → local
+  `h:mm a`; bash tries GNU `date -d` first, falling back to BSD `date -r` for macOS; PowerShell
+  uses `[DateTimeOffset]::FromUnixTimeSeconds(...)`). `seven_day` instead shows a countdown
+  duration like `(9d2h)` via `epoch_to_countdown`/`Format-Countdown`, not a clock time.
+- **Disabled token-count segment**: there's a commented-out `(used/max)` token-count sub-segment
+  right after the context percentage in both scripts (search "Token count"). It's intentionally
+  off by default — uncomment in both scripts together to re-enable, and note its color is wired
+  to the same last-filled-block RGB as the percentage text, not a fixed color.
 - **Worktree awareness**: when `workspace.git_worktree` is present (a Claude Code
   `EnterWorktree`-isolated session), line 2 shows the worktree name and its
   `worktree.original_branch` instead of the plain current branch. The plain-branch segment
