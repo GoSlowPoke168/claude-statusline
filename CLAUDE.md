@@ -65,6 +65,15 @@ Key derived-vs-raw distinctions worth knowing before editing:
   `worktree.original_branch` instead of the plain current branch. The plain-branch segment
   (`git rev-parse --abbrev-ref HEAD` against `workspace.current_dir`) is only computed/shown when
   *not* in such a session.
+- **Numeric formatting/rounding parity**: PowerShell's default numeric formatting traps are easy
+  to reach for and *look* equivalent to the bash side but aren't. Use `F`-format specifiers
+  (`"{0:F2}"`), never `N`-format (`"{0:N2}"`) — `N` inserts thousands separators (`$1,234.56`)
+  that bash's `printf "%.2f"` never produces. Round with `[math]::Round(x,
+  [MidpointRounding]::AwayFromZero)`, not bare `[math]::Round` — its default is banker's rounding
+  (round-half-to-even), which disagrees with awk's `int(v+0.5)` at exact `.5` boundaries (e.g. the
+  context bar's fill count). And RGB channels in `Color-At` must use `[math]::Truncate`, not
+  `Round` — the bash `color_at` truncates via awk's `%d`, so `Round` drifts the gradient by up to
+  1 per channel versus bash.
 
 ## Testing changes
 

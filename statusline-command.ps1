@@ -11,14 +11,14 @@ $PIPE = "$SEP | $RESET"
 function Color-At([double]$p) {
     if ($p -le 50) {
         $f = $p / 50.0
-        $r = [math]::Round(25 + (220 - 25) * $f)
-        $g = [math]::Round(180 + (200 - 180) * $f)
-        $b = [math]::Round(95 + (0 - 95) * $f)
+        $r = [math]::Truncate(25 + (220 - 25) * $f)
+        $g = [math]::Truncate(180 + (200 - 180) * $f)
+        $b = [math]::Truncate(95 + (0 - 95) * $f)
     } else {
         $f = ($p - 50) / 50.0
-        $r = [math]::Round(220 + (220 - 220) * $f)
-        $g = [math]::Round(200 + (40 - 200) * $f)
-        $b = [math]::Round(0 + (20 - 0) * $f)
+        $r = [math]::Truncate(220 + (220 - 220) * $f)
+        $g = [math]::Truncate(200 + (40 - 200) * $f)
+        $b = [math]::Truncate(0 + (20 - 0) * $f)
     }
     return @($r, $g, $b)
 }
@@ -53,7 +53,7 @@ if ($data.output_style.name) { $segMode = "`e[38;2;215;225;130m$($data.output_st
 $usedPct = $data.context_window.used_percentage
 if (-not $usedPct) { $usedPct = 0 }
 $blocks = 20
-$filled = [int][math]::Round(($usedPct / 100.0) * $blocks)
+$filled = [int][math]::Round(($usedPct / 100.0) * $blocks, [MidpointRounding]::AwayFromZero)
 if ($filled -gt $blocks) { $filled = $blocks }
 if ($filled -lt 0) { $filled = 0 }
 $bar = ""
@@ -80,7 +80,7 @@ if ($filled -gt 0) {
     $lastPos = 0
 }
 $pctRgb = Color-At $lastPos
-$pctStr = "{0:N0}%" -f $usedPct
+$pctStr = "{0:F0}%" -f $usedPct
 $segCtx = "$bar $usageEmoji `e[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m$pctStr$RESET"
 
 # --- Token count (used/max), disabled for now -- flip back on by uncommenting.
@@ -89,8 +89,8 @@ $segCtx = "$bar $usageEmoji `e[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m
 # $maxTok = $data.context_window.context_window_size
 # if (($null -ne $usedTok) -and ($null -ne $maxTok)) {
 #     function Format-Tokens([long]$n) {
-#         if ($n -ge 1000000) { return "{0:N0}M" -f ($n / 1000000) }
-#         elseif ($n -ge 1000) { return "{0:N0}k" -f ($n / 1000) }
+#         if ($n -ge 1000000) { return "{0:F0}M" -f ($n / 1000000) }
+#         elseif ($n -ge 1000) { return "{0:F0}k" -f ($n / 1000) }
 #         else { return "$n" }
 #     }
 #     $usedTokStr = Format-Tokens $usedTok
@@ -101,7 +101,7 @@ $segCtx = "$bar $usageEmoji `e[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m
 # --- session cost ---
 $segCost = ""
 if ($null -ne $data.cost.total_cost_usd) {
-    $costStr = '$' + ("{0:N2}" -f $data.cost.total_cost_usd)
+    $costStr = '$' + ("{0:F2}" -f $data.cost.total_cost_usd)
     $segCost = "`e[38;2;220;200;0m$costStr$RESET"
 }
 
@@ -137,7 +137,7 @@ $C_RL = "`e[38;2;120;200;255m"
 $segRatelimit = ""
 $fiveHPct = $data.rate_limits.five_hour.used_percentage
 if ($null -ne $fiveHPct) {
-    $fiveHStr = "{0:N0}%" -f $fiveHPct
+    $fiveHStr = "{0:F0}%" -f $fiveHPct
     $fiveHGlyph = Circle-Glyph $fiveHPct
     $resetStr = ""
     $fiveHReset = $data.rate_limits.five_hour.resets_at
@@ -151,7 +151,7 @@ if ($null -ne $fiveHPct) {
 }
 $sevenDPct = $data.rate_limits.seven_day.used_percentage
 if ($null -ne $sevenDPct) {
-    $sevenDStr = "{0:N0}%" -f $sevenDPct
+    $sevenDStr = "{0:F0}%" -f $sevenDPct
     $sevenDGlyph = Circle-Glyph $sevenDPct
     $sevenDResetStr = ""
     $sevenDReset = $data.rate_limits.seven_day.resets_at
