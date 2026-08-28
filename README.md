@@ -77,4 +77,4 @@ Restart Claude Code (or start a new session) after installing, either way.
 ## Support the Project
 If you find this plugin useful, please leave a star on GitHub or consider supporting its development!
 
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/jeremyhou)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T5T725W4FX)
