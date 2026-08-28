@@ -73,3 +73,8 @@ Restart Claude Code (or start a new session) after installing, either way.
 - To customize colors or layout, edit `statusline-command.sh` (Linux/macOS) or
   `statusline-command.ps1` (Windows) directly, then re-run the installer to redeploy it.
 - The two scripts are kept in sync by hand — if you change one, mirror the change in the other.
+
+## Support the Project
+If you find this plugin useful, please leave a star on GitHub or consider supporting its development!
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/jeremyhou)
