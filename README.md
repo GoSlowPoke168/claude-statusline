@@ -11,7 +11,7 @@ code velocity (+added/-removed) · 5-hour rate limit (with local reset time) · 
 
 **Line 2:** current directory · current git branch (or, in a worktree session, the worktree name
 and its original branch) · optional estimated water usage (see
-[Optional: water usage](#optional-water-usage))
+[Optional Feature: Water Usage](#optional-feature--water-usage))
 
 ### Normal session, early on (low context usage)
 
