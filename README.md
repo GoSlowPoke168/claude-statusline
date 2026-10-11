@@ -48,7 +48,7 @@ inside your WSL distro.
 
 Restart Claude Code (or start a new session) after installing, either way.
 
-### Optional: water usage
+### Optional Feature: 💧 Water Usage 
 
 ![Example statusline output with water usage](docs/statusline-water-preview.svg)
 
