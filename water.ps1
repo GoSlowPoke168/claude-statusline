@@ -1,5 +1,5 @@
 # Optional water-usage segment, dot-sourced by statusline-command.ps1.
-# Uses the caller's $data, $RESET, $PIPE, -Water* switches and $env:COLUMNS, and appends to $line2.
+# Uses the caller's $data, $ESC, $RESET, $PIPE, -Water* switches and $env:COLUMNS, and appends to $line2.
 # ~40 Wh per list-price $ (Couch 2026, via Epoch AI) x ~4.2 mL/Wh (Li et al., US on-site + off-site)
 $WATER_ML_PER_USD = 170
 $inv = [Globalization.CultureInfo]::InvariantCulture
@@ -152,7 +152,7 @@ function Get-LearnedPrices([string]$configDir) {
 # Display width: ANSI stripped, surrogate pairs (emoji) counted as 2 columns
 function Get-VisibleWidth([string]$s) {
     $w = 0
-    foreach ($c in ($s -replace "`e\[[0-9;]*m", "").ToCharArray()) {
+    foreach ($c in ($s -replace "$ESC\[[0-9;]*m", "").ToCharArray()) {
         if ([char]::IsHighSurrogate($c)) { $w += 2 } elseif (-not [char]::IsLowSurrogate($c)) { $w += 1 }
     }
     return $w
@@ -168,7 +168,7 @@ function Join-WaterParts([string]$sF, [string]$lF, [bool]$noLabels) {
         if ($out) { $out += " $([char]0x00B7) " }
         $out += "$lAmt$lLabel$lF"
     }
-    return "`e[38;2;70;150;255m$([char]0xD83D)$([char]0xDCA7) $out$RESET"  # 💧
+    return "$ESC[38;2;70;150;255m$([char]0xD83D)$([char]0xDCA7) $out$RESET"  # 💧
 }
 
 $segWater = ""
@@ -226,8 +226,8 @@ if ($WaterSession -or $WaterLifetime) {
                 if ($data.session_id) { foreach ($b in [Text.Encoding]::UTF8.GetBytes([string]$data.session_id)) { $seed += $b } }
                 $picked = Select-FunFacts $sessionMl $lifetimeMl $seed $spare
                 # " (≈ fact)" in the dim fact color, then back to the water color
-                $sF = if ($picked[0]) { " `e[38;2;120;160;210m($([char]0x2248) $($picked[0]))`e[38;2;70;150;255m" } else { "" }
-                $lF = if ($picked[1]) { " `e[38;2;120;160;210m($([char]0x2248) $($picked[1]))`e[38;2;70;150;255m" } else { "" }
+                $sF = if ($picked[0]) { " $ESC[38;2;120;160;210m($([char]0x2248) $($picked[0]))$ESC[38;2;70;150;255m" } else { "" }
+                $lF = if ($picked[1]) { " $ESC[38;2;120;160;210m($([char]0x2248) $($picked[1]))$ESC[38;2;70;150;255m" } else { "" }
                 $segWater = Join-WaterParts $sF $lF $false
             }
         }

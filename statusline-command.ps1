@@ -2,11 +2,14 @@
 # Only git.exe on PATH is used, and only for the "current branch" segment.
 param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterFunFact)
 
-$inputJson = [Console]::In.ReadToEnd()
+# Raw UTF-8 stdin/stdout so Windows PowerShell 5.1's OEM code page can't mangle emoji or block glyphs
+$inputJson = (New-Object IO.StreamReader([Console]::OpenStandardInput(), [Text.Encoding]::UTF8)).ReadToEnd()
 $data = $inputJson | ConvertFrom-Json
 
-$RESET = "`e[0m"
-$SEP = "`e[38;2;110;110;110m"
+# [char]27 rather than `e, which Windows PowerShell 5.1 doesn't support
+$ESC = [char]27
+$RESET = "$ESC[0m"
+$SEP = "$ESC[38;2;110;110;110m"
 $PIPE = "$SEP | $RESET"
 
 function Color-At([double]$p) {
@@ -28,8 +31,8 @@ function Color-At([double]$p) {
 $model = $data.model.display_name
 if (-not $model) { $model = "unknown" }
 $effort = $data.effort.level
-$C_MODEL = "`e[1;38;2;217;119;87m"
-$C_EFFORT = "`e[38;2;217;119;87m"
+$C_MODEL = "$ESC[1;38;2;217;119;87m"
+$C_EFFORT = "$ESC[38;2;217;119;87m"
 if ($effort) {
     $segModel = "$C_MODEL$model$RESET $C_EFFORT($effort)$RESET"
 } else {
@@ -40,15 +43,15 @@ if ($effort) {
 $segThinking = ""
 if ($null -ne $data.thinking.enabled) {
     if ($data.thinking.enabled) {
-        $segThinking = "`e[38;2;180;130;255mthinking: on$RESET"
+        $segThinking = "$ESC[38;2;180;130;255mthinking: on$RESET"
     } else {
-        $segThinking = "`e[38;2;120;120;120mthinking: off$RESET"
+        $segThinking = "$ESC[38;2;120;120;120mthinking: off$RESET"
     }
 }
 
 # --- mode ---
 $segMode = ""
-if ($data.output_style.name) { $segMode = "`e[38;2;215;225;130m$($data.output_style.name)$RESET" }
+if ($data.output_style.name) { $segMode = "$ESC[38;2;215;225;130m$($data.output_style.name)$RESET" }
 
 # --- context usage bar ---
 $usedPct = $data.context_window.used_percentage
@@ -62,9 +65,9 @@ for ($i = 1; $i -le $blocks; $i++) {
     if ($i -le $filled) {
         $pos = (($i - 1) / ($blocks - 1)) * 100
         $rgb = Color-At $pos
-        $bar += "`e[38;2;$($rgb[0]);$($rgb[1]);$($rgb[2])m$([char]0x2588)"
+        $bar += "$ESC[38;2;$($rgb[0]);$($rgb[1]);$($rgb[2])m$([char]0x2588)"
     } else {
-        $bar += "`e[38;2;60;60;60m$([char]0x2588)"
+        $bar += "$ESC[38;2;60;60;60m$([char]0x2588)"
     }
 }
 $bar += $RESET
@@ -82,7 +85,7 @@ if ($filled -gt 0) {
 }
 $pctRgb = Color-At $lastPos
 $pctStr = "{0:F0}%" -f $usedPct
-$segCtx = "$bar $usageEmoji `e[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m$pctStr$RESET"
+$segCtx = "$bar $usageEmoji $ESC[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m$pctStr$RESET"
 
 # --- Token count (used/max), disabled for now -- flip back on by uncommenting.
 # Color is linked to the same pctRgb as the percentage text.
@@ -96,14 +99,14 @@ $segCtx = "$bar $usageEmoji `e[1;38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m
 #     }
 #     $usedTokStr = Format-Tokens $usedTok
 #     $maxTokStr = Format-Tokens $maxTok
-#     $segCtx += " `e[38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m($usedTokStr/$maxTokStr)$RESET"
+#     $segCtx += " $ESC[38;2;$($pctRgb[0]);$($pctRgb[1]);$($pctRgb[2])m($usedTokStr/$maxTokStr)$RESET"
 # }
 
 # --- session cost ---
 $segCost = ""
 if ($null -ne $data.cost.total_cost_usd) {
     $costStr = '$' + ("{0:F2}" -f $data.cost.total_cost_usd)
-    $segCost = "`e[38;2;220;200;0m$costStr$RESET"
+    $segCost = "$ESC[38;2;220;200;0m$costStr$RESET"
 }
 
 # --- code velocity ---
@@ -113,7 +116,7 @@ $segVelocity = ""
 if (($null -ne $added) -or ($null -ne $removed)) {
     if ($null -eq $added) { $added = 0 }
     if ($null -eq $removed) { $removed = 0 }
-    $segVelocity = "`e[38;2;25;180;95m+$added$RESET `e[38;2;220;40;20m-$removed$RESET"
+    $segVelocity = "$ESC[38;2;25;180;95m+$added$RESET $ESC[38;2;220;40;20m-$removed$RESET"
 }
 
 # --- rate limits ---
@@ -134,7 +137,7 @@ function Format-Countdown([int64]$targetEpoch) {
     return "${days}d${hours}h"
 }
 
-$C_RL = "`e[38;2;120;200;255m"
+$C_RL = "$ESC[38;2;120;200;255m"
 $segRatelimit = ""
 $fiveHPct = $data.rate_limits.five_hour.used_percentage
 if ($null -ne $fiveHPct) {
@@ -178,16 +181,16 @@ if ($segRatelimit) { $line1 += "$PIPE$segRatelimit" }
 # --- line 2: cwd | branch | git worktree | worktree original branch ---
 $cwd = $data.workspace.current_dir
 if (-not $cwd) { $cwd = (Get-Location).Path }
-$C_DIR = "`e[38;2;150;200;255m"
+$C_DIR = "$ESC[38;2;150;200;255m"
 $segDir = "${C_DIR}$([char]0xD83D)$([char]0xDCC1) $cwd$RESET"   # 📁
 
 $gitWorktree = $data.workspace.git_worktree
 $segGitWorktree = ""
-if ($gitWorktree) { $segGitWorktree = "`e[38;2;0;220;220m$([char]0xD83C)$([char]0xDF3F) $gitWorktree$RESET" }  # 🌿
+if ($gitWorktree) { $segGitWorktree = "$ESC[38;2;0;220;220m$([char]0xD83C)$([char]0xDF3F) $gitWorktree$RESET" }  # 🌿
 
 $origBranch = $data.worktree.original_branch
 $segOrigBranch = ""
-if ($origBranch) { $segOrigBranch = "`e[38;2;220;180;0m$([char]0x2190) $origBranch$RESET" }  # ←
+if ($origBranch) { $segOrigBranch = "$ESC[38;2;220;180;0m$([char]0x2190) $origBranch$RESET" }  # ←
 
 # plain current git branch — only shown when NOT in a Claude Code worktree-isolated session.
 # Needs git.exe on PATH; everything else in this script has no external dependency at all.
@@ -196,7 +199,7 @@ if (-not $gitWorktree) {
     $branch = $null
     try { $branch = (git -C $cwd rev-parse --abbrev-ref HEAD 2>$null) } catch { }
     if ($branch -and $branch -ne "HEAD") {
-        $segBranch = "`e[38;2;120;200;120m$([char]0xD83C)$([char]0xDF3F) $branch$RESET"  # 🌿
+        $segBranch = "$ESC[38;2;120;200;120m$([char]0xD83C)$([char]0xDF3F) $branch$RESET"  # 🌿
     }
 }
 
@@ -209,4 +212,7 @@ if ($segOrigBranch) { $line2 += "$PIPE$segOrigBranch" }
 $waterLib = Join-Path $PSScriptRoot "water.ps1"
 if (Test-Path $waterLib) { . $waterLib }
 
-Write-Output "$line1`n$line2"
+$bytes = (New-Object Text.UTF8Encoding $false).GetBytes("$line1`n$line2`n")
+$stdout = [Console]::OpenStandardOutput()
+$stdout.Write($bytes, 0, $bytes.Length)
+$stdout.Flush()

@@ -23,7 +23,7 @@ scripts consumed directly by Claude Code's `statusLine` settings hook.
 logic.** There is no shared source of truth and no automated check that they match. Whenever you
 change one (new segment, color tweak, formatting change, bug fix), make the equivalent change in
 the other, translating idioms as needed (e.g. `jq -r '.foo.bar // empty'` ↔
-`$data.foo.bar`, ANSI escapes via `\033[...m` in bash vs `` `e[...m `` in PowerShell). Verify both
+`$data.foo.bar`, ANSI escapes via `\033[...m` in bash vs `$ESC[...m` in PowerShell). Verify both
 before considering a change complete.
 
 The README's preview images (`docs/*.svg`) are hand-written SVG mockups, not generated; update them
@@ -103,9 +103,11 @@ the script directly and inspect the rendered output, e.g.:
 echo '{"model":{"display_name":"Claude"},"context_window":{"used_percentage":42},"cost":{"total_cost_usd":1.23,"total_lines_added":10,"total_lines_removed":2},"rate_limits":{"five_hour":{"used_percentage":30,"resets_at":1750000000}},"workspace":{"current_dir":"'"$PWD"'"}}' | bash statusline-command.sh
 ```
 
-The bash script needs `jq` on PATH. For PowerShell, pipe equivalent JSON through
-`pwsh -File statusline-command.ps1` — not `powershell.exe`, since Windows PowerShell 5.1 doesn't
-support `` `e `` and prints a literal `e[...`. After editing, re-run the relevant installer
+The bash script needs `jq` on PATH. For PowerShell, pipe equivalent JSON through both
+`pwsh -File statusline-command.ps1` and `powershell.exe -File statusline-command.ps1`: the installer
+falls back to Windows PowerShell 5.1 when PowerShell 7 isn't installed, so the PS scripts must work
+in both. That's why they use `$ESC` (`[char]27`) instead of `` `e `` (7-only) and read/write raw
+UTF-8 via `[Console]::OpenStandard*` (5.1 defaults to the OEM code page). After editing, re-run the relevant installer
 (`./install.sh` or `install.ps1`) to redeploy the script to `~/.claude/` if you want to see it
 live in a real Claude Code session — restart Claude Code (or start a new session) afterward, since
 the statusline command is only re-read at session start.
