@@ -221,7 +221,7 @@ if ($WaterSession -or $WaterLifetime) {
         }
         if ($spare -ne 0) {
             $segWater = $labeled
-            if ($WaterFunFact) {
+            if ($WaterEquivalents) {
                 $seed = [long][math]::Floor([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() / 300)
                 if ($data.session_id) { foreach ($b in [Text.Encoding]::UTF8.GetBytes([string]$data.session_id)) { $seed += $b } }
                 $picked = Select-FunFacts $sessionMl $lifetimeMl $seed $spare

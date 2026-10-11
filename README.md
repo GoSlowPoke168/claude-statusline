@@ -54,17 +54,17 @@ Restart Claude Code (or start a new session) after installing, either way.
 
 Add any of these flags to append an estimated water footprint to line 2; re-run without them to
 turn it off. The segment is column-aware: it reads the terminal width Claude Code passes in
-`$COLUMNS` and picks fun facts that fit the space left, falling back to shorter facts, one fact,
-no facts, then just the amounts as the window narrows.
+`$COLUMNS` and picks everyday equivalents that fit the space left, falling back to shorter ones,
+one, none, then just the amounts as the window narrows.
 
 **Linux / macOS**
 ```sh
-curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash -s -- --water-session --water-lifetime --water-fun-fact
+curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash -s -- --water-session --water-lifetime --water-equivalents
 ```
 
 **Windows**
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1))) -WaterSession -WaterLifetime -WaterFunFact
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1))) -WaterSession -WaterLifetime -WaterEquivalents
 ```
 From a clone, pass the same flags to `./install.sh` or `install.ps1`.
 
@@ -72,7 +72,7 @@ From a clone, pass the same flags to `./install.sh` or `install.ps1`.
 |---|---|---|
 | `--water-session` | `-WaterSession` | water used this session |
 | `--water-lifetime` | `-WaterLifetime` | all-time water, from the same token history `/stats` uses |
-| `--water-fun-fact` | `-WaterFunFact` | a rotating comparison after each value, e.g. `(≈ a faucet dripping for 15 days)` |
+| `--water-equivalents` | `-WaterEquivalents` | a rotating everyday equivalent after each value, e.g. `(≈ a faucet dripping for 15 days)` |
 
 #### How the water is calculated
 

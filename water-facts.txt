@@ -1,4 +1,4 @@
-# Water fun facts for the statusline's --water-fun-fact flag.
+# Everyday water equivalents for the statusline's --water-equivalents flag.
 # kind|unit_mL|many (ratio >= 2)|one (1 <= ratio < 2)|part (0.1 <= ratio < 1, %s = percent)
 # count: unit_mL is one item, %s is the count. time: unit_mL is mL per second, %s is a duration.
 time|0.36|a faucet dripping for %s||

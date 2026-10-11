@@ -1,6 +1,6 @@
 # Claude Code status line: native PowerShell port (no bash, no jq, no Git for Windows required).
 # Only git.exe on PATH is used, and only for the "current branch" segment.
-param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterFunFact)
+param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterEquivalents)
 
 # Raw UTF-8 stdin/stdout so Windows PowerShell 5.1's OEM code page can't mangle emoji or block glyphs
 $inputJson = (New-Object IO.StreamReader([Console]::OpenStandardInput(), [Text.Encoding]::UTF8)).ReadToEnd()

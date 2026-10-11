@@ -1,8 +1,8 @@
 # Installs the custom Claude Code statusline on Windows using a native PowerShell
 # script — no Git for Windows, bash.exe, or jq required.
-# Usage: powershell -ExecutionPolicy Bypass -File install.ps1 [-WaterSession] [-WaterLifetime] [-WaterFunFact]
+# Usage: powershell -ExecutionPolicy Bypass -File install.ps1 [-WaterSession] [-WaterLifetime] [-WaterEquivalents]
 #    or: irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1 | iex
-param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterFunFact)
+param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterEquivalents)
 
 $ErrorActionPreference = "Stop"
 
@@ -26,10 +26,10 @@ Write-Host "Installing Claude Code statusline into $ClaudeDir ..."
 New-Item -ItemType Directory -Force -Path $ClaudeDir | Out-Null
 Install-File "statusline-command.ps1"
 foreach ($f in "water.ps1", "water-facts.txt", "water-prices.txt") {
-    if ($WaterSession -or $WaterLifetime -or $WaterFunFact) { Install-File $f }
+    if ($WaterSession -or $WaterLifetime -or $WaterEquivalents) { Install-File $f }
     else { Remove-Item -Path (Join-Path $ClaudeDir $f) -ErrorAction SilentlyContinue }
 }
-if (-not ($WaterSession -or $WaterLifetime -or $WaterFunFact)) { Remove-Item -Path (Join-Path $ClaudeDir "water-learned-prices.txt") -ErrorAction SilentlyContinue }
+if (-not ($WaterSession -or $WaterLifetime -or $WaterEquivalents)) { Remove-Item -Path (Join-Path $ClaudeDir "water-learned-prices.txt") -ErrorAction SilentlyContinue }
 
 # Prefer PowerShell 7+ (pwsh) if present for better Unicode/emoji handling,
 # otherwise fall back to the Windows PowerShell that ships with every Windows install.
@@ -39,7 +39,7 @@ $ShellExe = if ($PwshCmd) { $PwshCmd.Source } else { (Get-Command powershell.exe
 $Command = "`"$ShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$StatuslineDest`""
 if ($WaterSession) { $Command += " -WaterSession" }
 if ($WaterLifetime) { $Command += " -WaterLifetime" }
-if ($WaterFunFact) { $Command += " -WaterFunFact" }
+if ($WaterEquivalents) { $Command += " -WaterEquivalents" }
 
 # --- merge (not overwrite) the statusLine key into settings.json ---
 if (Test-Path $SettingsPath) {

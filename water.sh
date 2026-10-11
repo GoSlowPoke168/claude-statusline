@@ -1,11 +1,11 @@
 # Optional water-usage segment, sourced by statusline-command.sh with its args.
 # Uses the caller's $input, $cost, $RESET, $PIPE and $COLUMNS, and appends to $line2.
-WATER_SESSION=0; WATER_LIFETIME=0; WATER_FUN_FACT=0
+WATER_SESSION=0; WATER_LIFETIME=0; WATER_EQUIVALENTS=0
 for arg in "$@"; do
     case "$arg" in
         --water-session) WATER_SESSION=1 ;;
         --water-lifetime) WATER_LIFETIME=1 ;;
-        --water-fun-fact) WATER_FUN_FACT=1 ;;
+        --water-equivalents) WATER_EQUIVALENTS=1 ;;
     esac
 done
 
@@ -181,7 +181,7 @@ if [ "$WATER_SESSION" = 1 ] || [ "$WATER_LIFETIME" = 1 ]; then
         esac
         if [ "$spare" -ne 0 ]; then
             seg_water=$labeled
-            if [ "$WATER_FUN_FACT" = 1 ]; then
+            if [ "$WATER_EQUIVALENTS" = 1 ]; then
                 session_id=$(echo "$input" | jq -r '.session_id // empty')
                 water_seed=$(printf '%s' "$session_id" | od -An -tu1 | awk -v t="$(date +%s)" '{ for (i = 1; i <= NF; i++) s += $i } END { print s + int(t / 300) }')
                 picked=$(pick_facts "$session_ml" "$lifetime_ml" "$water_seed" "$spare")

@@ -1,14 +1,14 @@
 #!/bin/bash
 # Installs the custom Claude Code statusline on Linux or macOS.
-# Usage: ./install.sh [--water-session] [--water-lifetime] [--water-fun-fact]
+# Usage: ./install.sh [--water-session] [--water-lifetime] [--water-equivalents]
 #    or: curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash -s -- [flags]
 set -euo pipefail
 
 FLAGS=""
 for arg in "$@"; do
     case "$arg" in
-        --water-session|--water-lifetime|--water-fun-fact) FLAGS="$FLAGS $arg" ;;
-        *) echo "Usage: install.sh [--water-session] [--water-lifetime] [--water-fun-fact]" >&2; exit 1 ;;
+        --water-session|--water-lifetime|--water-equivalents) FLAGS="$FLAGS $arg" ;;
+        *) echo "Usage: install.sh [--water-session] [--water-lifetime] [--water-equivalents]" >&2; exit 1 ;;
     esac
 done
 
