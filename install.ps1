@@ -31,10 +31,9 @@ foreach ($f in "water.ps1", "water-facts.txt", "water-prices.txt") {
 }
 if (-not ($WaterSession -or $WaterLifetime -or $WaterEquivalents)) { Remove-Item -Path (Join-Path $ClaudeDir "water-learned-prices.txt") -ErrorAction SilentlyContinue }
 
-# Prefer PowerShell 7+ (pwsh) if present for better Unicode/emoji handling,
-# otherwise fall back to the Windows PowerShell that ships with every Windows install.
-$PwshCmd = Get-Command pwsh.exe -ErrorAction SilentlyContinue
-$ShellExe = if ($PwshCmd) { $PwshCmd.Source } else { (Get-Command powershell.exe).Source }
+# Prefer PowerShell 7+ (pwsh), else the Windows PowerShell 5.1 every Windows has. Bare names resolve
+# via PATH, so a Store update of pwsh (which moves its versioned install folder) doesn't break the command.
+$ShellExe = if (Get-Command pwsh.exe -ErrorAction SilentlyContinue) { "pwsh.exe" } else { "powershell.exe" }
 
 $Command = "`"$ShellExe`" -NoProfile -ExecutionPolicy Bypass -File `"$StatuslineDest`""
 if ($WaterSession) { $Command += " -WaterSession" }

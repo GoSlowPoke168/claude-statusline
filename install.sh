@@ -68,7 +68,10 @@ if [ ! -f "$SETTINGS" ]; then
 fi
 
 TMP="$(mktemp)"
-jq --arg cmd "bash ~/.claude/statusline-command.sh$FLAGS" '.statusLine = {"type": "command", "command": $cmd}' "$SETTINGS" > "$TMP"
+# ~ for the default location; the real (quoted) path when CLAUDE_CONFIG_DIR points elsewhere
+SCRIPT_PATH="~/.claude/statusline-command.sh"
+[ -n "${CLAUDE_CONFIG_DIR:-}" ] && SCRIPT_PATH="\"$STATUSLINE_DEST\""
+jq --arg cmd "bash $SCRIPT_PATH$FLAGS" '.statusLine = {"type": "command", "command": $cmd}' "$SETTINGS" > "$TMP"
 mv "$TMP" "$SETTINGS"
 
 echo "Done. Statusline installed at $STATUSLINE_DEST"
