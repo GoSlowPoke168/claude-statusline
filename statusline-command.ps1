@@ -1,5 +1,6 @@
 # Claude Code status line: native PowerShell port (no bash, no jq, no Git for Windows required).
 # Only git.exe on PATH is used, and only for the "current branch" segment.
+param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterFunFact)
 
 $inputJson = [Console]::In.ReadToEnd()
 $data = $inputJson | ConvertFrom-Json
@@ -203,5 +204,9 @@ $line2 = $segDir
 if ($segBranch) { $line2 += "$PIPE$segBranch" }
 if ($segGitWorktree) { $line2 += "$PIPE$segGitWorktree" }
 if ($segOrigBranch) { $line2 += "$PIPE$segOrigBranch" }
+
+# --- optional water usage (water.ps1 is installed only with a -Water* flag) ---
+$waterLib = Join-Path $PSScriptRoot "water.ps1"
+if (Test-Path $waterLib) { . $waterLib }
 
 Write-Output "$line1`n$line2"

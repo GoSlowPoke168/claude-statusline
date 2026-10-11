@@ -1,7 +1,15 @@
 #!/bin/bash
 # Installs the custom Claude Code statusline on Linux or macOS.
-# Usage: ./install.sh
+# Usage: ./install.sh [--water-session] [--water-lifetime] [--water-fun-fact]
 set -euo pipefail
+
+FLAGS=""
+for arg in "$@"; do
+    case "$arg" in
+        --water-session|--water-lifetime|--water-fun-fact) FLAGS="$FLAGS $arg" ;;
+        *) echo "Usage: ./install.sh [--water-session] [--water-lifetime] [--water-fun-fact]" >&2; exit 1 ;;
+    esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
@@ -13,6 +21,11 @@ echo "Installing Claude Code statusline into $CLAUDE_DIR ..."
 mkdir -p "$CLAUDE_DIR"
 cp "$STATUSLINE_SRC" "$STATUSLINE_DEST"
 chmod +x "$STATUSLINE_DEST"
+if [ -n "$FLAGS" ]; then
+    cp "$SCRIPT_DIR/water.sh" "$SCRIPT_DIR/water-facts.txt" "$SCRIPT_DIR/water-prices.txt" "$CLAUDE_DIR/"
+else
+    rm -f "$CLAUDE_DIR/water.sh" "$CLAUDE_DIR/water-facts.txt" "$CLAUDE_DIR/water-prices.txt" "$CLAUDE_DIR/water-learned-prices.txt"
+fi
 
 # --- ensure jq is available ---
 if ! command -v jq >/dev/null 2>&1; then
@@ -42,7 +55,7 @@ if [ ! -f "$SETTINGS" ]; then
 fi
 
 TMP="$(mktemp)"
-jq '.statusLine = {"type": "command", "command": "bash ~/.claude/statusline-command.sh"}' "$SETTINGS" > "$TMP"
+jq --arg cmd "bash ~/.claude/statusline-command.sh$FLAGS" '.statusLine = {"type": "command", "command": $cmd}' "$SETTINGS" > "$TMP"
 mv "$TMP" "$SETTINGS"
 
 echo "Done. Statusline installed at $STATUSLINE_DEST"

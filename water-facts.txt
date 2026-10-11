@@ -1,0 +1,89 @@
+# Water fun facts for the statusline's --water-fun-fact flag.
+# kind|unit_mL|many (ratio >= 2)|one (1 <= ratio < 2)|part (0.1 <= ratio < 1, %s = percent)
+# count: unit_mL is one item, %s is the count. time: unit_mL is mL per second, %s is a duration.
+time|0.36|a faucet dripping for %s||
+time|8.76|a running toilet for %s||
+time|126.2|leaving the kitchen faucet on for %s||
+time|157.7|showering for %s||
+time|315.5|running a garden hose for %s||
+time|63090|an open fire hydrant for %s||
+time|2800000000|%s of Niagara Falls||
+count|5|%s teaspoons||
+count|240|%s glasses of water|a glass of water|%s of a glass of water
+count|355|%s cans of soda|a can of soda|%s of a can of soda
+count|500|%s water bottles|a water bottle|%s of a water bottle
+count|2000|%s 2-liter bottles|a 2-liter bottle|%s of a 2-liter bottle
+count|3785|%s gallons of milk|a gallon of milk|%s of a gallon of milk
+time|0.02315|all your drinking water for %s||
+count|6000|%s toilet flushes|a toilet flush|%s of a toilet flush
+count|15000|%s dishwasher loads|a dishwasher load|%s of a dishwasher load
+count|50000|%s loads of laundry|a load of laundry|%s of a load of laundry
+count|150000|%s bathtubs|a bathtub|%s of a bathtub
+count|280000|%s kiddie pools|a kiddie pool|%s of a kiddie pool
+count|1500000|%s hot tubs|a hot tub|%s of a hot tub
+count|17000000|%s backyard pools|a backyard pool|%s of a backyard pool
+count|2500000000|%s Olympic pools|an Olympic pool|%s of an Olympic pool
+count|30|%s ice cubes||
+count|1700|%s kettles of tea|a full kettle|%s of a kettle
+count|2500|washing your hands %s times|washing your hands once|
+count|4000|%s pots of pasta water|a pot of pasta water|%s of a pot of pasta water
+count|19000|brushing your teeth with the tap running %s times|brushing your teeth with the tap running|
+count|75000|hand-washing %s sinks of dishes|hand-washing a sink of dishes|%s of a sink of dishes
+count|380000|washing your car %s times|washing your car once|%s of a car wash
+time|0.000413|keeping a houseplant alive for %s||
+time|0.02199|watering a corn stalk for %s||
+time|0.04398|keeping a Christmas tree watered for %s||
+time|0.06597|watering a tomato plant for %s||
+time|3.819|watering a giant prize pumpkin for %s||
+time|3.886|watering a small lawn for %s||
+count|7600|%s watering cans|a full watering can|%s of a watering can
+count|13000|the water to grow %s tomatoes|the water to grow a tomato|%s of the water to grow a tomato
+count|25000|the water to grow %s potatoes|the water to grow a potato|%s of the water to grow a potato
+count|27000|the water behind %s cups of tea|the water behind a cup of tea|%s of the water behind a cup of tea
+count|40000|the water behind %s slices of bread|the water behind a slice of bread|%s of the water behind a slice of bread
+count|70000|the water to grow %s apples|the water to grow an apple|%s of the water to grow an apple
+count|95000|the water to grow %s bananas|the water to grow a banana|%s of the water to grow a banana
+count|140000|the water behind %s cups of coffee|the water behind a cup of coffee|%s of the water behind a cup of coffee
+count|196000|the water behind %s eggs|the water behind an egg|%s of the water behind an egg
+count|1240000|the water behind %s pizzas|the water behind a whole pizza|%s of the water behind a pizza
+count|17280|a glass of water for everyone on %s school buses|a glass of water for everyone on a school bus|a glass of water for %s of a school bus
+count|60000|a glass of water for everyone in %s movie theaters|a glass of water for a packed movie theater|a glass of water for %s of a movie theater
+count|360000|a glass of water for everyone at %s high schools|a glass of water for your whole high school|a glass of water for %s of a high school
+count|4560000|a glass of water for everyone at %s NBA games|a glass of water for a sold-out NBA game|a glass of water for %s of an NBA arena
+count|16800000|a glass of water for everyone at %s NFL games|a glass of water for a sold-out NFL game|a glass of water for %s of an NFL stadium
+time|0.0001157|keeping a hamster hydrated for %s||
+time|0.002315|keeping a cat hydrated for %s||
+time|0.01042|keeping a dog hydrated for %s||
+time|2.315|keeping an elephant hydrated for %s||
+count|0.006|%s teardrops||
+count|150|%s water balloons|a water balloon|%s of a water balloon
+count|1600|%s Super Soaker refills|a Super Soaker refill|%s of a Super Soaker
+count|10000|%s ice bucket challenges|an ice bucket challenge|%s of an ice bucket challenge
+count|38000|%s Gatorade dunks on a coach|a Gatorade dunk on a coach|%s of a Gatorade dunk
+count|42000|the water in %s human bodies|the water in a whole human|%s of the water in your body
+count|60|%s popsicles|a popsicle|%s of a popsicle
+count|200|%s juice boxes|a juice box|%s of a juice box
+count|350|%s mugs of coffee|a mug of coffee|%s of a mug of coffee
+count|150|%s snow cones|a snow cone|%s of a snow cone
+count|480|%s ice cube trays|an ice cube tray|%s of an ice cube tray
+count|250|the milk for %s bowls of cereal|the milk for a bowl of cereal|%s of the milk in a bowl of cereal
+time|0.0000951|keeping a cactus alive for %s||
+time|0.01157|all the spit you make in %s||
+time|189.3|a lawn sprinkler running for %s||
+time|0.463|keeping a horse hydrated for %s||
+time|1.157|keeping a cow hydrated for %s||
+time|0.002894|keeping a chicken hydrated for %s||
+count|1700000|the water behind %s chocolate bars|the water behind a chocolate bar|%s of the water behind a chocolate bar
+count|170000|the water behind %s glasses of orange juice|the water behind a glass of orange juice|%s of the water behind a glass of orange juice
+count|200000|the water behind %s glasses of milk|the water behind a glass of milk|%s of the water behind a glass of milk
+count|185000|the water behind %s bags of potato chips|the water behind a bag of potato chips|%s of the water behind a bag of chips
+count|4717000|the rain that hits a house's roof in %s 1-inch storms|the rain that hits a house's roof in a 1-inch storm|%s of the rain that hits a roof in a 1-inch storm
+count|15|%s sips||
+count|0.05|%s drops||
+count|240|%s cups|a cup|%s of a cup
+count|10000|%s buckets|a bucket|%s of a bucket
+count|38000|%s fish tanks|a fish tank|%s of a fish tank
+count|4000|%s fishbowls|a fishbowl|%s of a fishbowl
+count|300|%s bowls of soup|a bowl of soup|%s of a bowl of soup
+count|1800|%s pots of coffee|a pot of coffee|%s of a pot of coffee
+count|250|%s water guns|a water gun|%s of a water gun

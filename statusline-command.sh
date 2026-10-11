@@ -233,4 +233,8 @@ line2="${seg_dir}"
 [ -n "$seg_git_worktree" ] && line2="${line2}${PIPE}${seg_git_worktree}"
 [ -n "$seg_orig_branch" ] && line2="${line2}${PIPE}${seg_orig_branch}"
 
+# --- Optional water usage (water.sh is installed only with a --water-* flag) ---
+water_lib="$(dirname "${BASH_SOURCE[0]}")/water.sh"
+[ -f "$water_lib" ] && . "$water_lib" "$@"
+
 printf '%b\n%b' "${line1}" "${line2}"

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="230" viewBox="0 0 1360 230" font-family="JetBrains Mono, Fira Code, Consolas, Menlo, monospace">
+  <!-- terminal window -->
+  <rect x="0" y="0" width="1360" height="230" rx="10" fill="#1e1e2e"/>
+  <!-- title bar -->
+  <rect x="0" y="0" width="1360" height="32" rx="10" fill="#313244"/>
+  <rect x="0" y="20" width="1360" height="12" fill="#313244"/>
+  <circle cx="20" cy="16" r="6" fill="#f38ba8"/>
+  <circle cx="40" cy="16" r="6" fill="#f9e2af"/>
+  <circle cx="60" cy="16" r="6" fill="#a6e3a1"/>
+  <text x="680" y="20" font-size="13" fill="#a6adc8" text-anchor="middle">kali@kali: ~/Projects/claude-statusline</text>
+
+  <!-- empty prompt box -->
+  <rect x="20" y="46" width="1320" height="42" rx="8" fill="#181825" stroke="#585b70" stroke-width="1.5"/>
+  <text x="36" y="73" font-size="16" fill="#cdd6f4">&gt;</text>
+  <rect x="52" y="59" width="8" height="18" fill="#cdd6f4"/>
+
+  <!-- line 1: mid-session (45% context, $7.06 spent) -->
+  <text x="20" y="128" font-size="15" xml:space="preserve">
+    <tspan fill="#D97757" font-weight="bold">Opus 5.5</tspan><tspan fill="#D97757"> (high)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#B482FF">thinking: on</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#D7E182">Default</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#19B45F">█</tspan><tspan fill="#2EB655">█</tspan><tspan fill="#42B84B">█</tspan><tspan fill="#57BA41">█</tspan><tspan fill="#6BBC37">█</tspan><tspan fill="#80BF2D">█</tspan><tspan fill="#94C123">█</tspan><tspan fill="#A9C319">█</tspan><tspan fill="#BDC50F">█</tspan><tspan fill="#3C3C3C">███████████</tspan><tspan fill="#e0e0e0"> ⚡ </tspan><tspan fill="#BDC50F" font-weight="bold">45%</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#DCC800">$7.06</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#19B45F">+412</tspan><tspan fill="#e0e0e0"> </tspan><tspan fill="#DC2814">-87</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">5h: ◑ 52% (resets 4:15 PM)</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C8FF">7d: ◔ 31% (4d9h)</tspan>
+  </text>
+
+  <!-- line 2: branch, then all three water flags (session water = $7.06 x 170 mL/$) -->
+  <text x="20" y="163" font-size="15" xml:space="preserve">
+    <tspan fill="#96C8FF">📁 ~/Projects/claude-statusline</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#78C878">🌿 master</tspan><tspan fill="#6E6E6E"> | </tspan><tspan fill="#4696FF">💧 1.2 L session </tspan><tspan fill="#78A0D2">(≈ 5 glasses of water)</tspan><tspan fill="#4696FF"> · 473 L lifetime </tspan><tspan fill="#78A0D2">(≈ keeping a cactus alive for 158 years)</tspan>
+  </text>
+
+  <!-- Claude Code's own auto-accept mode indicator (rendered by Claude Code itself, not the statusline script).
+       Color is Claude Code's real "warning" theme token (dark theme): rgb(255,193,7). -->
+  <text x="20" y="198" font-size="14" xml:space="preserve">
+    <tspan fill="#FFC107">⏵⏵ auto mode on</tspan><tspan fill="#7f849c"> (shift+tab to cycle)</tspan>
+  </text>
+</svg>

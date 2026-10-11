@@ -26,6 +26,9 @@ the other, translating idioms as needed (e.g. `jq -r '.foo.bar // empty'` ↔
 `$data.foo.bar`, ANSI escapes via `\033[...m` in bash vs `` `e[...m `` in PowerShell). Verify both
 before considering a change complete.
 
+The README's preview images (`docs/*.svg`) are hand-written SVG mockups, not generated; update them
+when a change alters the rendered look.
+
 ## How data flows
 
 Claude Code invokes the configured `statusLine` command once per render, piping a JSON payload on
@@ -74,6 +77,22 @@ Key derived-vs-raw distinctions worth knowing before editing:
   context bar's fill count). And RGB channels in `Color-At` must use `[math]::Truncate`, not
   `Round` — the bash `color_at` truncates via awk's `%d`, so `Round` drifts the gradient by up to
   1 per channel versus bash.
+- **Water segment (opt-in)**: lives in `water.sh`/`water.ps1`, sourced at the end of each main
+  script only if present (installers copy it only with a water flag). It's appended to `$line2`
+  sized to `$COLUMNS` (set by Claude Code; `tput cols` doesn't work; keep the 6-column margin):
+  the labeled amounts if they fit, with facts chosen by `pick_facts`/`Select-FunFacts` to fill the
+  spare columns (seed picks among all fitting pairs from different rows, else among fitting single
+  facts; enumeration order must match across ports), else the compact form. Width
+  is measured with ANSI stripped and emoji as 2 columns. Enabled by script args
+  (`--water-session`/`-WaterSession`, etc.) that the installers append to the `statusLine`
+  command; the PS `param()` stays in the main script so the switches bind. Session water = `cost.total_cost_usd` ×
+  `WATER_ML_PER_USD`; lifetime prices `~/.claude/stats-cache.json`'s `modelUsage` tokens with the
+  shared `water-prices.txt` (official rates, 1h cache writes, exact id or id + `-YYYYMMDD`), plus
+  $0.01/web search, and adds the session cost. Models not in that table use prices learned from
+  transcripts' `cost-state` records (cost ÷ weighted tokens), cached in `water-learned-prices.txt`
+  for a day and only computed when such a model exists; failing that, a family guess. Fun
+  facts come from the shared `water-facts.txt` (pipe-delimited, read by both ports), rotating every
+  5 minutes by session_id byte sum + `floor(now/300)`.
 
 ## Testing changes
 
@@ -84,8 +103,9 @@ the script directly and inspect the rendered output, e.g.:
 echo '{"model":{"display_name":"Claude"},"context_window":{"used_percentage":42},"cost":{"total_cost_usd":1.23,"total_lines_added":10,"total_lines_removed":2},"rate_limits":{"five_hour":{"used_percentage":30,"resets_at":1750000000}},"workspace":{"current_dir":"'"$PWD"'"}}' | bash statusline-command.sh
 ```
 
-For PowerShell, pipe equivalent JSON through `pwsh -File statusline-command.ps1` (or
-`powershell.exe` on Windows). After editing, re-run the relevant installer
+The bash script needs `jq` on PATH. For PowerShell, pipe equivalent JSON through
+`pwsh -File statusline-command.ps1` — not `powershell.exe`, since Windows PowerShell 5.1 doesn't
+support `` `e `` and prints a literal `e[...`. After editing, re-run the relevant installer
 (`./install.sh` or `install.ps1`) to redeploy the script to `~/.claude/` if you want to see it
 live in a real Claude Code session — restart Claude Code (or start a new session) afterward, since
 the statusline command is only re-read at session start.
