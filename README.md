@@ -37,8 +37,16 @@ curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/mas
 irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1 | iex
 ```
 
-Prefer to read the code first? Clone the repo and run `./install.sh` or
-`powershell -ExecutionPolicy Bypass -File install.ps1` from it instead.
+**Manual install (git clone)**, if you'd rather read the code first:
+```sh
+git clone https://github.com/GoSlowPoke168/claude-statusline.git
+cd claude-statusline
+./install.sh                                          # Linux / macOS
+powershell -ExecutionPolicy Bypass -File install.ps1  # Windows
+```
+
+**Updating:** re-run the same install command with the same flags (or `git pull` first, for a clone).
+Running it without the water flags turns the water segment off.
 
 The Windows version uses a native PowerShell port of the script — no Git for Windows, `bash.exe`, or `jq` required.
 Only `git.exe` is needed, and only for the branch segment; everything else works without it.
