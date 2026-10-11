@@ -4,18 +4,36 @@
 $WATER_ML_PER_USD = 170
 $inv = [Globalization.CultureInfo]::InvariantCulture
 
+# awk's printf "%.1f" for $x >= 0: rounds the exact binary value half-to-even (.NET's "0.0" rounds the
+# 15-digit decimal away from zero, so 0.15 and 6.25 differ)
+function Format-1([double]$x) {
+    $bits = [BitConverter]::DoubleToInt64Bits($x)
+    $exp = [int](($bits -shr 52) -band 0x7FF); $man = $bits -band 0xFFFFFFFFFFFFF
+    if ($exp -eq 0) { $exp = 1 } else { $man = $man -bor 0x10000000000000 }
+    $e = $exp - 1075
+    if ($e -ge 0) { $tenths = [Numerics.BigInteger]$man * [Numerics.BigInteger]::Pow(2, $e) * 10 }
+    else {
+        $den = [Numerics.BigInteger]::Pow(2, -$e); $rem = [Numerics.BigInteger]::Zero
+        $tenths = [Numerics.BigInteger]::DivRem([Numerics.BigInteger]$man * 10, $den, [ref]$rem)
+        $c = ($rem * 2).CompareTo($den)
+        if ($c -gt 0 -or ($c -eq 0 -and -not $tenths.IsEven)) { $tenths += 1 }
+    }
+    $s = $tenths.ToString().PadLeft(2, '0')
+    return $s.Substring(0, $s.Length - 1) + "." + $s.Substring($s.Length - 1)
+}
+
 function Format-Water([double]$m) {
     if ($m -lt 1000) { return "$([math]::Floor($m + 0.5)) mL" }
-    elseif ($m -lt 100000) { return ($m / 1000).ToString("0.0", $inv) + " L" }
+    elseif ($m -lt 100000) { return (Format-1 ($m / 1000)) + " L" }
     else { return "$([math]::Floor($m / 1000 + 0.5)) L" }
 }
 
 function Format-Count([double]$x) {
-    if ($x -lt 10) { return ($x.ToString("0.0", $inv) -replace '\.0$', '') }
+    if ($x -lt 10) { return ((Format-1 $x) -replace '\.0$', '') }
     if ($x -lt 1e6) { return ([math]::Floor($x + 0.5)).ToString("#,0", $inv) }
-    if ($x -lt 1e9) { return (($x / 1e6).ToString("0.0", $inv) -replace '\.0$', '') + " million" }
-    if ($x -lt 1e12) { return (($x / 1e9).ToString("0.0", $inv) -replace '\.0$', '') + " billion" }
-    return (($x / 1e12).ToString("0.0", $inv) -replace '\.0$', '') + " trillion"
+    if ($x -lt 1e9) { return ((Format-1 ($x / 1e6)) -replace '\.0$', '') + " million" }
+    if ($x -lt 1e12) { return ((Format-1 ($x / 1e9)) -replace '\.0$', '') + " billion" }
+    return ((Format-1 ($x / 1e12)) -replace '\.0$', '') + " trillion"
 }
 
 function Format-Duration([double]$sec) {
