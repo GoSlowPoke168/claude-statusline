@@ -1,28 +1,41 @@
 #!/bin/bash
 # Installs the custom Claude Code statusline on Linux or macOS.
 # Usage: ./install.sh [--water-session] [--water-lifetime] [--water-fun-fact]
+#    or: curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash -s -- [flags]
 set -euo pipefail
 
 FLAGS=""
 for arg in "$@"; do
     case "$arg" in
         --water-session|--water-lifetime|--water-fun-fact) FLAGS="$FLAGS $arg" ;;
-        *) echo "Usage: ./install.sh [--water-session] [--water-lifetime] [--water-fun-fact]" >&2; exit 1 ;;
+        *) echo "Usage: install.sh [--water-session] [--water-lifetime] [--water-fun-fact]" >&2; exit 1 ;;
     esac
 done
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Empty when piped from curl, in which case files are downloaded from GitHub instead of copied
+SCRIPT_DIR=""
+[ -n "${BASH_SOURCE[0]:-}" ] && SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RAW_URL="https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master"
 CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-STATUSLINE_SRC="$SCRIPT_DIR/statusline-command.sh"
 STATUSLINE_DEST="$CLAUDE_DIR/statusline-command.sh"
 SETTINGS="$CLAUDE_DIR/settings.json"
 
+install_file() {
+    if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/$1" ]; then
+        cp "$SCRIPT_DIR/$1" "$CLAUDE_DIR/$1"
+    elif command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$RAW_URL/$1" -o "$CLAUDE_DIR/$1"
+    else
+        wget -qO "$CLAUDE_DIR/$1" "$RAW_URL/$1"
+    fi
+}
+
 echo "Installing Claude Code statusline into $CLAUDE_DIR ..."
 mkdir -p "$CLAUDE_DIR"
-cp "$STATUSLINE_SRC" "$STATUSLINE_DEST"
+install_file statusline-command.sh
 chmod +x "$STATUSLINE_DEST"
 if [ -n "$FLAGS" ]; then
-    cp "$SCRIPT_DIR/water.sh" "$SCRIPT_DIR/water-facts.txt" "$SCRIPT_DIR/water-prices.txt" "$CLAUDE_DIR/"
+    for f in water.sh water-facts.txt water-prices.txt; do install_file "$f"; done
 else
     rm -f "$CLAUDE_DIR/water.sh" "$CLAUDE_DIR/water-facts.txt" "$CLAUDE_DIR/water-prices.txt" "$CLAUDE_DIR/water-learned-prices.txt"
 fi

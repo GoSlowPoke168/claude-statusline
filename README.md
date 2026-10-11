@@ -29,18 +29,18 @@ branch name for the worktree's name and the branch it originally forked from.
 
 **Linux / macOS**
 ```sh
-git clone https://github.com/GoSlowPoke168/claude-statusline.git
-cd claude-statusline
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash
 ```
 
-**Windows**
+**Windows** (PowerShell)
 ```powershell
-git clone https://github.com/GoSlowPoke168/claude-statusline.git
-cd claude-statusline
-powershell -ExecutionPolicy Bypass -File install.ps1
+irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1 | iex
 ```
-Uses a native PowerShell port of the script — no Git for Windows, `bash.exe`, or `jq` required.
+
+Prefer to read the code first? Clone the repo and run `./install.sh` or
+`powershell -ExecutionPolicy Bypass -File install.ps1` from it instead.
+
+The Windows version uses a native PowerShell port of the script — no Git for Windows, `bash.exe`, or `jq` required.
 Only `git.exe` is needed, and only for the branch segment; everything else works without it.
 
 **Running Claude Code inside WSL instead of natively?** Use the Linux instructions above from
@@ -59,13 +59,14 @@ no facts, then just the amounts as the window narrows.
 
 **Linux / macOS**
 ```sh
-./install.sh --water-session --water-lifetime --water-fun-fact
+curl -fsSL https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.sh | bash -s -- --water-session --water-lifetime --water-fun-fact
 ```
 
 **Windows**
 ```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1 -WaterSession -WaterLifetime -WaterFunFact
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1))) -WaterSession -WaterLifetime -WaterFunFact
 ```
+From a clone, pass the same flags to `./install.sh` or `install.ps1`.
 
 | Linux / macOS | Windows | Shows |
 |---|---|---|
@@ -97,7 +98,7 @@ comparisons live in `water-facts.txt`.
 
 ## What the installer does
 
-1. Copies the statusline script (`statusline-command.sh` or `.ps1`) to `~/.claude/` (or
+1. Copies (or, for the one-line install, downloads) the statusline script (`statusline-command.sh` or `.ps1`) to `~/.claude/` (or
    `$CLAUDE_CONFIG_DIR` if you've set that env var), plus `water.sh`/`water.ps1`,
    `water-facts.txt` and `water-prices.txt` only if a water flag is used (otherwise it removes them).
 2. **Linux/macOS only:** makes sure `jq` is installed, via your platform's package manager if

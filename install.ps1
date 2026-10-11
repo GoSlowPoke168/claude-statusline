@@ -1,21 +1,32 @@
 # Installs the custom Claude Code statusline on Windows using a native PowerShell
 # script — no Git for Windows, bash.exe, or jq required.
 # Usage: powershell -ExecutionPolicy Bypass -File install.ps1 [-WaterSession] [-WaterLifetime] [-WaterFunFact]
+#    or: irm https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master/install.ps1 | iex
 param([switch]$WaterSession, [switch]$WaterLifetime, [switch]$WaterFunFact)
 
 $ErrorActionPreference = "Stop"
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+# Empty when run via irm | iex, in which case files are downloaded from GitHub instead of copied
+$ScriptDir = if ($PSCommandPath) { Split-Path -Parent $PSCommandPath } else { "" }
+$RawUrl = "https://raw.githubusercontent.com/GoSlowPoke168/claude-statusline/master"
 $ClaudeDir = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME ".claude" }
-$StatuslineSrc = Join-Path $ScriptDir "statusline-command.ps1"
 $StatuslineDest = Join-Path $ClaudeDir "statusline-command.ps1"
 $SettingsPath = Join-Path $ClaudeDir "settings.json"
 
+function Install-File([string]$name) {
+    $dest = Join-Path $ClaudeDir $name
+    if ($ScriptDir -and (Test-Path (Join-Path $ScriptDir $name))) { Copy-Item -Path (Join-Path $ScriptDir $name) -Destination $dest -Force }
+    else {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -UseBasicParsing -Uri "$RawUrl/$name" -OutFile $dest
+    }
+}
+
 Write-Host "Installing Claude Code statusline into $ClaudeDir ..."
 New-Item -ItemType Directory -Force -Path $ClaudeDir | Out-Null
-Copy-Item -Path $StatuslineSrc -Destination $StatuslineDest -Force
+Install-File "statusline-command.ps1"
 foreach ($f in "water.ps1", "water-facts.txt", "water-prices.txt") {
-    if ($WaterSession -or $WaterLifetime -or $WaterFunFact) { Copy-Item -Path (Join-Path $ScriptDir $f) -Destination (Join-Path $ClaudeDir $f) -Force }
+    if ($WaterSession -or $WaterLifetime -or $WaterFunFact) { Install-File $f }
     else { Remove-Item -Path (Join-Path $ClaudeDir $f) -ErrorAction SilentlyContinue }
 }
 if (-not ($WaterSession -or $WaterLifetime -or $WaterFunFact)) { Remove-Item -Path (Join-Path $ClaudeDir "water-learned-prices.txt") -ErrorAction SilentlyContinue }
