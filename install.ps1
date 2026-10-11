@@ -42,7 +42,8 @@ if ($WaterEquivalents) { $Command += " -WaterEquivalents" }
 
 # --- merge (not overwrite) the statusLine key into settings.json ---
 if (Test-Path $SettingsPath) {
-    $Json = Get-Content $SettingsPath -Raw | ConvertFrom-Json
+    # Explicit UTF-8: Windows PowerShell 5.1's Get-Content would read a BOM-less file as ANSI and mangle non-ASCII
+    $Json = Get-Content $SettingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
 } else {
     $Json = [PSCustomObject]@{}
 }
@@ -53,7 +54,10 @@ if ($Json.PSObject.Properties.Name -contains "statusLine") {
 } else {
     $Json | Add-Member -NotePropertyName "statusLine" -NotePropertyValue $StatusLineObj -Force
 }
-$Json | ConvertTo-Json -Depth 10 | Set-Content -Path $SettingsPath -Encoding utf8
+# UTF-8 without a BOM (5.1's Set-Content -Encoding utf8 adds one); depth high enough not to truncate settings
+$JsonText = $Json | ConvertTo-Json -Depth 100
+$FullSettingsPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SettingsPath)
+[IO.File]::WriteAllText($FullSettingsPath, $JsonText, (New-Object Text.UTF8Encoding $false))
 
 Write-Host "Done. Statusline installed at $StatuslineDest"
 Write-Host "settings.json updated at $SettingsPath (other keys preserved)."
